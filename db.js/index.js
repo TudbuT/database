@@ -10,5 +10,6 @@ module.exports = {
         parsed.save = function () {
             fs.writeFileSync(this.path, JSON.stringify(this));
         }
+        return parsed;
     }
 }
