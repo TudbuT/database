@@ -8,8 +8,10 @@ setInterval(() => {
 }, 5000);
 module.exports = {
     load: function (file, autosave) {
-        if(!fs.existsSync(file))
-             return console.error("This file does not exist!");
+        if(!fs.existsSync(file)) {
+            console.info("This file does not exist! Creating it...");
+            fs.writeFileSync(file, "{}");
+        }
         var parsed =
             JSON.parse(fs.readFileSync(file, "utf8"));
         parsed.path = file;
