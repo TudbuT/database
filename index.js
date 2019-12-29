@@ -1,11 +1,13 @@
 const fs = require("fs");
 var loaded = []
+
 setInterval(() => {
     loaded.forEach((l) => {
         if(l.autosave)
             l.save();
     })
 }, 5000);
+
 module.exports = {
     load: function (file, autosave) {
         if(!fs.existsSync(file)) {
