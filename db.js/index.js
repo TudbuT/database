@@ -16,7 +16,7 @@ module.exports = {
         var parsed =
             JSON.parse(fs.readFileSync(file, "utf8"));
         parsed.path = file;
-        if(autosave == 1)
+        if(autosave == 1 || autosave == true)
             parsed.autosave = 1;
         else
             parsed.autosave = 0;
