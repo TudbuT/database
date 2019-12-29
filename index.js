@@ -1,5 +1,5 @@
 const fs = require("fs");
-var loaded = []
+var loaded = [];
 
 setInterval(() => {
     loaded.forEach((l) => {
