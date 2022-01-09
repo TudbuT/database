@@ -1,5 +1,5 @@
 const fs = require("fs");
-var loaded = [];
+const loaded = [];
 
 setInterval(() => {
     loaded.forEach((l) => {
@@ -14,15 +14,12 @@ module.exports = {
             console.info("This file does not exist! Creating it...");
             fs.writeFileSync(file, "{}");
         }
-        var parsed =
-            JSON.parse(fs.readFileSync(file, "utf8"));
+        const parsed = JSON.parse(fs.readFileSync(file, "utf8"));
         parsed.path = file;
-        if(autosave == 1 || autosave == true)
-            parsed.autosave = 1;
-        else
-            parsed.autosave = 0;
+        parsed.autosave = autosave;
         parsed.save = function () {
-            fs.writeFileSync(this.path, JSON.stringify(this));
+            fs.writeFileSync(this.path + ".tmp", JSON.stringify(this));
+            fs.remameSync(this.path + ".tmp", this.path);
         };
         loaded[loaded.length] = parsed;
         return parsed;
