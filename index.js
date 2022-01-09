@@ -1,12 +1,17 @@
 const fs = require("fs");
 const loaded = [];
 
-setInterval(() => {
+function saveAll() {
     loaded.forEach((l) => {
-        if(l.autosave)
+        if(l.autosave) {
             l.save();
-    })
-}, 5000);
+        }
+    });
+}
+
+
+setInterval(saveAll, 5000);
+process.on('exit', saveAll);
 
 module.exports = {
     load: function (file, autosave) {
