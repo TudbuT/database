@@ -23,7 +23,7 @@ module.exports = {
         parsed.path = file;
         parsed.autosave = autosave;
         parsed.save = function () {
-            fs.writeFileSync(this.path + ".tmp", JSON.stringify(this));
+            fs.writeFileSync(this.path + ".tmp", JSON.stringify(this, null, this.spaces));
             fs.renameSync(this.path + ".tmp", this.path);
         };
         loaded[loaded.length] = parsed;
