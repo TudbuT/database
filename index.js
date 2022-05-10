@@ -2,6 +2,8 @@ const fs = require("fs");
 const loaded = [];
 
 function saveAll() {
+    if(isSaving > 0)
+        return
     loaded.forEach((l) => {
         if(l.autosave) {
             l.save();
@@ -10,7 +12,8 @@ function saveAll() {
 }
 
 
-setInterval(saveAll, 5000);
+let isSaving = 0
+setInterval(saveAll, 20000);
 process.on('exit', saveAll);
 
 module.exports = {
@@ -22,9 +25,10 @@ module.exports = {
         const parsed = JSON.parse(fs.readFileSync(file, "utf8"));
         parsed.path = file;
         parsed.autosave = autosave;
-        parsed.save = function () {
-            fs.writeFileSync(this.path + ".tmp", JSON.stringify(this, null, this.spaces));
-            fs.renameSync(this.path + ".tmp", this.path);
+        parsed.save = async function () {
+            this.saving = true;
+            isSaving++;
+            fs.writeFile(this.path + ".tmp", stringify(this), {}, () => {fs.renameSync(this.path + ".tmp", this.path); isSaving--});
         };
         loaded[loaded.length] = parsed;
         return parsed;
