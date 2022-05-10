@@ -1,4 +1,5 @@
 const fs = require("fs");
+const aJSON = require("true-json-promise");
 const loaded = [];
 
 function saveAll() {
@@ -13,7 +14,7 @@ function saveAll() {
 
 
 let isSaving = 0
-setInterval(saveAll, 20000);
+setInterval(saveAll, 5000);
 process.on('exit', saveAll);
 
 module.exports = {
@@ -28,7 +29,7 @@ module.exports = {
         parsed.save = async function () {
             this.saving = true;
             isSaving++;
-            fs.writeFile(this.path + ".tmp", stringify(this), {}, () => {fs.renameSync(this.path + ".tmp", this.path); isSaving--});
+            fs.writeFile(this.path + ".tmp", await aJSON.stringify(this), {}, () => {fs.renameSync(this.path + ".tmp", this.path); isSaving--});
         };
         loaded[loaded.length] = parsed;
         return parsed;
