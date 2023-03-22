@@ -3,10 +3,10 @@ const aJSON = require("true-json-promise");
 const loaded = [];
 
 function saveAll() {
-    if(isSaving > 0)
+    if(isSaving === loaded.length)
         return
     loaded.forEach((l) => {
-        if(l.autosave) {
+        if(l.autosave && !l.saving && l.lastSave < new Date().getTime() + l.lastSaveTime * 10) {
             l.save();
         }
     });
@@ -26,10 +26,14 @@ module.exports = {
         const parsed = JSON.parse(fs.readFileSync(file, "utf8"));
         parsed.path = file;
         parsed.autosave = autosave;
+        parsed.saving = false;
         parsed.save = async function () {
+            const time = new Date().getTime();
+            this.lastSave = time;
             this.saving = true;
             isSaving++;
-            fs.writeFile(this.path + ".tmp", await aJSON.stringify(this), {}, () => {fs.renameSync(this.path + ".tmp", this.path); isSaving--});
+            fs.writeFile(this.path + ".tmp", await aJSON.stringify(this), {}, () => fs.rename(this.path + ".tmp", this.path, () => isSaving-- ));
+            this.lastSaveTime = new Date().getTime() - time;
         };
         loaded[loaded.length] = parsed;
         return parsed;

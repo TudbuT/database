@@ -1,6 +1,6 @@
 {
   "name": "bdb.js",
-  "version": "0.3.2c",
+  "version": "0.3.3",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
