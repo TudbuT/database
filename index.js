@@ -6,7 +6,7 @@ function saveAll() {
     if(isSaving === loaded.length)
         return
     loaded.forEach((l) => {
-        if(l.autosave && !l.saving && l.lastSave < new Date().getTime() + l.lastSaveTime * 10) {
+        if(l.autosave && !l.saving && l.lastSave + l.lastSaveTime * 10 < new Date().getTime()) {
             l.save();
         }
     });
@@ -34,7 +34,10 @@ module.exports = {
             this.lastSave = time;
             this.saving = true;
             isSaving++;
-            fs.writeFile(this.path + ".tmp", await aJSON.stringify(this), {}, () => fs.rename(this.path + ".tmp", this.path, () => isSaving-- ));
+            fs.writeFile(this.path + ".tmp", await aJSON.stringify(this), {}, () => fs.rename(this.path + ".tmp", this.path, () => {
+                isSaving--; 
+                this.saving = false;
+            }));
             this.lastSaveTime = new Date().getTime() - time;
         };
         loaded[loaded.length] = parsed;
